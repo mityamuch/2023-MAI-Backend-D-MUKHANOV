@@ -1,0 +1,35 @@
+version: '3.11'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=azgard1111
+      - POSTGRES_DB=books
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  web:
+    build: .
+    command: gunicorn myproject.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://postgres:azgard1111@db:5432/books
+
+  nginx:
+    image: nginx:1.21-alpine
+    volumes:
+      - ./nginx/conf:/etc/nginx/conf.d
+      - static_volume:/app/static
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+  static_volume:
