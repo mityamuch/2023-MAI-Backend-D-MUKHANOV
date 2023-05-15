@@ -25,15 +25,6 @@ class AuthorRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AuthorSerializer
 
 
-
-
-
-
-
-
-
-
-
 def search(request):
     if request.method == 'GET':
         query = request.GET.get('q', '')
